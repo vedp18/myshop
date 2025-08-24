@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Shop</title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.7">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+    <body>
+        <header class="base-header">
+            <a href="/" class="base-logo">My Shop</a>
+            <div class="base-cart">
+                <a href="{% url 'cart:cart_detail' %}" class="base-cart-link">
+                    <span class="base-cart-icon-wrapper">
+                        <img src="{% static 'img/cart_.png' %}" alt="Cart Icon" class="base-cart-icon">
+                            {% if cart|length > 99 %}
+                                <span class="base-cart-badge-small">
+                                    99+
+                                </span>
+                            {% else %}
+                                <span class="base-cart-badge">
+                                    {{ cart|length }}
+                                </span>
+                            {% endif %}
+                    </span>
+                </a>
+            </div>
+        </header>
+        <nav class="base-navbar">
+            <ul class="base-navbar-list">
+                <li class="base-navbar-item">
+                    <a href="{% url 'shop:product_list' %}">Home</a>
+                </li>
+                {% for category in categories %}
+                    <li class="base-navbar-item">
+                        <a href="{% url 'shop:product_list_by_category' category_slug=category.slug %}">
+                            {{ category.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <main class="base-content">
+            {% block content %}
+            <!-- Content will be injected here -->
+            {% endblock %}
+        </main>
+    </body>
+</html>

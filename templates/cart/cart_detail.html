@@ -1,0 +1,77 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="cart_detail-container">
+    <h1 class="cart_detail-title">
+        <i class="fas fa-shopping-cart"></i> Your Cart
+    </h1>
+    {% if cart %}
+        <table class="cart_detail-table">
+            <thead>
+                <tr>
+                    <th class="cart_detail-th">Product</th>
+                    <th class="cart_detail-th">Price</th>
+                    <th class="cart_detail-th">Quantity</th>
+                    <th class="cart_detail-th">Total</th>
+                    <th class="cart_detail-th">Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr class="cart_detail-row">
+                    <td class="cart_detail-product">
+                        <a href="{{ item.product.get_absolute_url }}">
+                            <img src="{% if item.product.image %}{{ item.product.image.url }}{% else %}{% static 'img/no_product_image.png' %}{% endif %}" alt="{{ item.product.name }}" class="cart_detail-product-image">
+                        </a>
+                        <a href="{{ item.product.get_absolute_url }}">
+                            <span class="cart_detail-product-name">{{ item.product.name }}</span>
+                        </a>
+                    </td>
+                    <td class="cart_detail-price">₹ {{ item.price }}</td>
+                    <td class="cart_detail-quantity">
+                        <form action="{% url 'cart:cart_add' item.product.id %}" method="post" class="cart_detail-update-form">
+                            {% csrf_token %}
+                            {{ item.update_quantity_form.quantity }}
+                            {{ item.update_quantity_form.override }}
+                            <button type="submit" class="cart_detail-update-btn">
+                                Update
+                            </button>
+                        </form>
+                    </td>
+                    <td class="cart_detail-total">₹ {{ item.total_price }}</td>
+                    <td>
+                        <form action="{% url 'cart:cart_remove' item.product.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="cart_detail-remove-btn">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="cart_detail-summary">
+            <span class="cart_detail-summary-label">Grand Total:</span>
+            <span class="cart_detail-summary-value">₹ {{ cart.get_total_price }}</span>
+        </div>
+        <a href="{% url 'orders:order_create' %}" class="cart_detail-checkout-btn">
+                Checkout <i class="fas fa-arrow-right"></i>
+        </a>
+        <div class="cart_detail-actions">
+            <a href="{% url 'shop:product_list' %}" class="cart_detail-continue-btn">
+                <i class="fas fa-arrow-left"></i> Continue Shopping
+            </a>
+        </div>
+    {% else %}
+        <div class="cart_detail-empty">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Your cart is empty.</p>
+            <a href="{% url 'shop:product_list' %}" class="cart_detail-continue-btn">
+                <i class="fas fa-arrow-left"> </i> Shop Now 
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

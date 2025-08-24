@@ -1,0 +1,61 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="order_create-container">
+    <h1 class="order_create-title">
+        <img src="{% static 'img/checkout_icon.png' %}" class="order_create-icon"> Checkout
+    </h1>
+    <div class="order_create-columns">
+        <!-- Left: Checkout Form -->
+        <div class="order_create-form-col">
+            <form method="post" class="order_create-form" id="order-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="order_create-field">
+                        <label for="{{ field.id_for_label }}" class="order_create-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="order_create-error">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </form>
+        </div>
+        <!-- Right: Order Details -->
+        <div class="order_create-cart-details-col">
+            <div class="order_create-cart-details">
+                <h2 class="order_create-cart-title">Your Order</h2>
+                <table class="order_create-cart-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>₹ {{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹ {{ item.total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="order_create-grand-total">
+                    <span>Grand Total:</span>
+                    <span class="order_create-grand-total-value">₹ {{ cart.get_total_price }}</span>
+                </div>
+            </div>
+            <!-- Checkout button below order details -->
+            <button type="submit" form="order-form" class="order_create-submit-btn order_create-submit-btn-right">
+                Place Order <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

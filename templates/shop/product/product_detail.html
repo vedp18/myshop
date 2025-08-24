@@ -1,0 +1,22 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="product_detail-container">
+    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_product_image.png' %}{% endif %}" alt="{{ product.name }}" class="product_detail-image">
+    <div class="product_detail-info">
+        <h1 class="product_detail-title">{{ product.name }}</h1>
+        <p class="product_detail-description">{{ product.description }}</p>
+        <div class="product_detail-meta">
+            <span class="product_detail-price">₹ {{ product.price }}</span>
+        </div>
+        <form action="{% url "cart:cart_add" product.id %}" method="post" class="product_detail-addtocart-form">
+            {{ cart_product_form }}
+            {% csrf_token %}
+            <button type="submit" class="product_detail-addtocart">
+                <i class="fas fa-cart-plus"></i> Add to Cart
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

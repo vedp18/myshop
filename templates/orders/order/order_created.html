@@ -1,0 +1,18 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="order_created-container">
+    <div class="order_created-icon">
+        <i class="fas fa-check-circle"></i>
+    </div>
+    <h1 class="order_created-title">Thank You!</h1>
+    <p class="order_created-message">
+        Your order has been placed successfully.<br>
+        We appreciate your purchase and will process your order soon.
+    </p>
+    <a href="{% url 'shop:product_list' %}" class="order_created-home-btn">
+        <i class="fas fa-arrow-left"></i> Continue Shopping
+    </a>
+</div>
+{% endblock %}
